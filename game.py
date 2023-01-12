@@ -18,19 +18,21 @@ class TicTacToe():
     def __init__(self):
         self.board = self.make_board()
         self.current_winner = None
+        self.XsPoint = 0
+        self.OsPoint = 0
 
     @staticmethod
     def make_board():
-        return [' ' for _ in range(9)]
+        return [' ' for _ in range(25)]
 
     def print_board(self):
-        for row in [self.board[i*3:(i+1) * 3] for i in range(3)]:
+        for row in [self.board[i*5:(i+1) * 5] for i in range(25)]:
             print('| ' + ' | '.join(row) + ' |')
 
     @staticmethod
     def print_board_nums():
         # 0 | 1 | 2
-        number_board = [[str(i) for i in range(j*3, (j+1)*3)] for j in range(3)]
+        number_board = [[str(i) for i in range(j*5, (j+1)*5)] for j in range(5)]
         for row in number_board:
             print('| ' + ' | '.join(row) + ' |')
 
@@ -42,15 +44,22 @@ class TicTacToe():
             return True
         return False
 
+    def increase_point(self):
+        if self.current_winner == 'X':
+            self.XsPoint += 1
+        else:
+            self.OsPoint += 1
+
+
     def winner(self, square, letter):
         # check the row
-        row_ind = math.floor(square / 3)
-        row = self.board[row_ind*3:(row_ind+1)*3]
+        row_ind = math.floor(square / 5)
+        row = self.board[row_ind*5:(row_ind+1)*5]
         # print('row', row)
         if all([s == letter for s in row]):
             return True
-        col_ind = square % 3
-        column = [self.board[col_ind+i*3] for i in range(3)]
+        col_ind = square % 5
+        column = [self.board[col_ind+i*5] for i in range(5)]
         # print('col', column)
         if all([s == letter for s in column]):
             return True
@@ -94,9 +103,11 @@ def play(game, x_player, o_player, print_game=True):
                 print('')
 
             if game.current_winner:
+                game.increase_point()
                 if print_game:
+                    print("X's point is: " + str(game.XsPoint))
+                    print("O's point is: " + str(game.OsPoint))
                     print(letter + ' wins!')
-                return letter  # ends the loop and exits the game
             letter = 'O' if letter == 'X' else 'X'  # switches player
 
         time.sleep(.8)
